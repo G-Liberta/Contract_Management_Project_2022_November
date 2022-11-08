@@ -119,7 +119,7 @@ class Invoice(models.Model):
         return f'{self.client} / {self.date}'
 
 
-class InvoiceItems(models.Model):
+class InvoiceItem(models.Model):
     warehouse_id = models.ForeignKey('Contracts_api.Warehouse', on_delete=models.CASCADE)
     quantity = models.FloatField(default=0)
     price = models.FloatField(default=0)
