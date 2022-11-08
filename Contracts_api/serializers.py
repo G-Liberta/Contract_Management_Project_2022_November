@@ -31,20 +31,20 @@ class UserProfileSerializer(serializers.ModelSerializer):
         return user
 
 
-class ProfileFeedItemSerializer(serializers.ModelSerializer):
+class ContractSerializer(serializers.ModelSerializer):
     """Serializes profile feed items"""
 
     class Meta:
         """meta class"""
-        model = models.ProfileFeedItem
+        model = models.Contract
         fields = ('id', 'user_profile', 'status_text', 'created_on')
         extra_kwargs = {'user_profile': {'read_only': True}}
 
 
-class ProductSerializer(serializers.ModelSerializer):
+class ContractItemsSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = models.Product
+        model = models.ContractItems
         fields = ('id', 'name', 'price', 'quantity')
 
     def validate(self, data):
@@ -52,6 +52,27 @@ class ProductSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Product quantity can't be negative")
         return data
 
+class HospitalSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.Hospital
+        fields = ('id', 'name', 'price', 'quantity')
+
+    def validate(self, data):
+        if data['quantity'] < 0:
+            raise serializers.ValidationError("Product quantity can't be negative")
+        return data
+
+class WarehouseSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.Warehouse
+        fields = ('id', 'name', 'price', 'quantity')
+
+    def validate(self, data):
+        if data['quantity'] < 0:
+            raise serializers.ValidationError("Product quantity can't be negative")
+        return data
 
 class InvoiceSerializer(serializers.ModelSerializer):
     items = serializers.SerializerMethodField()

@@ -127,11 +127,11 @@ class UserLoginApiView(ObtainAuthToken):
     renderer_classes = api_settings.DEFAULT_RENDERER_CLASSES
 
 
-class UserProfileFeedViewSet(viewsets.ModelViewSet):
+class ContractViewSet(viewsets.ModelViewSet):
     """Handles creating, reading and updating profile feed items"""
     authentication_classes = (TokenAuthentication,)
-    serializer_class = serializers.ProfileFeedItemSerializer
-    queryset = models.ProfileFeedItem.objects.all()
+    serializer_class = serializers.ContractSerializer
+    queryset = models.Hospital.objects.all()
     permission_classes = (permissions.UpdateOwnStatus, IsAuthenticated)
 
     def perform_create(self, serializer):
@@ -139,19 +139,30 @@ class UserProfileFeedViewSet(viewsets.ModelViewSet):
         serializer.save(user_profile=self.request.user)
 
 
-class ProductViewSet(viewsets.ModelViewSet):
+class ContractItemsViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
-    serializer_class = serializers.ProductSerializer
-    queryset = models.Product.objects.all()
+    serializer_class = serializers.ContractItemsSerializer
+    queryset = models.ContractItems.objects.all()
     permission_classes = (IsAuthenticated,)
 
+
+class HospitalViewSet(viewsets.ModelViewSet):
+    authentication_classes = (TokenAuthentication,)
+    serializer_class = serializers.HospitalSerializer
+    queryset = models.Hospital.objects.all()
+    permission_classes = (permissions.UpdateOwnInvoice, IsAuthenticated)
+
+class WarehouseViewSet(viewsets.ModelViewSet):
+    authentication_classes = (TokenAuthentication,)
+    serializer_class = serializers.WarehouseSerializer
+    queryset = models.Warehouse.objects.all()
+    permission_classes = (permissions.UpdateOwnInvoice, IsAuthenticated)
 
 class InvoiceViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
     serializer_class = serializers.InvoiceSerializer
     queryset = models.Invoice.objects.all()
-    permission_classes = (permissions.UpdateOwnInvoice, IsAuthenticated)
-
+    permission_classes = (IsAuthenticated,)
 
 class InvoiceItemViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
