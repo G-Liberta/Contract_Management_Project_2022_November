@@ -61,7 +61,7 @@ class Contract(models.Model):
     """Tabela e kontratave"""
     subject = models.CharField(max_length=255)
     hospital = models.ForeignKey('Contracts_api.Hospital', on_delete=models.CASCADE)
-    product = models.ForeignKey('Contracts_api.Products', on_delete=models.CASCADE)
+    product = models.ForeignKey('Contracts_api.ContractItems', on_delete=models.CASCADE)
     deadline = models.DateField
     prot_nr = models.CharField(max_length=10)
     sign_date = models.DateField
@@ -102,3 +102,25 @@ class Invoice(models.Model):
 
     def __str__(self):
         return f'{self.client} / {self.date}'
+
+class ContractItems(models.Model):
+    contract_id = models.ForeignKey('Contracts_api.Contract', on_delete=models.CASCADE)
+    warehouse_id = models.ForeignKey('Contracts_api.Warehouse', on_delete=models.CASCADE)
+    quantity = models.FloatField(default=0)
+    price = models.FloatField(default=0)
+    discount = models.FloatField(default=0)
+
+    @property
+    def total(self):
+        return self.invoiceitem_set.all().aggregate(total=Sum(F('quantity') * F('price')+F('discount')))
+
+    def __str__(self):
+        return f'{self.contract_id}'
+
+class InvoiceItems(models.Model):
+    warehouse_id = models.ForeignKey('Contracts_api.Warehouse', on_delete=models.CASCADE)
+    quantity = models.FloatField(default=0)
+    price = models.FloatField(default=0)
+
+    def __str__(self):
+        return self.warehouse_id
