@@ -6,8 +6,8 @@ from django.contrib.auth.models import BaseUserManager
 from django.conf import settings
 from django.db.models import Sum,F
 
-class ContractManager(BaseUserManager):
-    """Manager for contracts"""
+class UserProfileManager(BaseUserManager):
+    """Manager for UserProfiles"""
 
     def create_user(self, name, email, password=None):
         """Create a new user profile"""
@@ -33,8 +33,8 @@ class ContractManager(BaseUserManager):
 
 
 
-class Contract(AbstractBaseUser, PermissionsMixin):
-    """Database models for the contracts in the system"""
+class UserProfile(AbstractBaseUser, PermissionsMixin):
+    """Database model for users in the system"""
     email = models.EmailField(max_length=255, unique=True)
     name = models.CharField(max_length=255)
     is_active = models.BooleanField(default=True)
@@ -44,3 +44,61 @@ class Contract(AbstractBaseUser, PermissionsMixin):
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['name']
+
+    def get_full_name(self):
+        """Retrieve full name for user"""
+        return self.name
+
+    def get_short_name(self):
+        """Retrieve short name of user"""
+        return self.name
+
+    def __str__(self):
+        """Return string representation of user"""
+        return self.email
+
+class Contract(models.Model):
+    """Tabela e kontratave"""
+    subject = models.CharField(max_length=255)
+    hospital = models.ForeignKey('Contracts_api.Hospital', on_delete=models.CASCADE)
+    product = models.ForeignKey('Contracts_api.Products', on_delete=models.CASCADE)
+    deadline = models.DateField
+    prot_nr = models.CharField(max_length=10)
+    sign_date = models.DateField
+    total_value = models.CharField
+
+    def __str__(self):
+        """Return the model as a string"""
+        return self.hospital
+
+class Hospital(models.Model):
+    name = models.CharField(max_length=50)
+    adress = models.FloatField(max_length=250)
+    email = models.EmailField(max_length=255, unique=True)
+    phone_nr = models.CharField
+
+    def __str__(self):
+        return self.name
+
+class Warehouse(models.Model):
+    name = models.CharField(max_length=50)
+    price = models.FloatField(default=0)
+    quantity = models.FloatField(default=0)
+
+    def __str__(self):
+        return self.name
+
+class Invoice(models.Model):
+    client = models.ForeignKey('Contracts_api.Hospital', on_delete=models.CASCADE)
+    date = models.DateTimeField(auto_now_add=True)
+
+    @property
+    def total(self):
+        # sum = 0
+        # for item in self.invoiceitem_set.all():
+        #     sum += item.total
+        # return sum
+        return self.invoiceitem_set.all().aggregate(total=Sum(F('quantity') * F('price')))
+
+    def __str__(self):
+        return f'{self.client} / {self.date}'
