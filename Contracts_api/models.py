@@ -31,8 +31,6 @@ class UserProfileManager(BaseUserManager):
 
         return user
 
-
-
 class UserProfile(AbstractBaseUser, PermissionsMixin):
     """Database model for users in the system"""
     email = models.EmailField(max_length=255, unique=True)
@@ -113,7 +111,7 @@ class Invoice(models.Model):
         # for item in self.invoiceitem_set.all():
         #     sum += item.total
         # return sum
-        return self.invoiceitem_set.all().aggregate(total=Sum(F('quantity') * F('price')))
+        return self.invoiceitems_set.all().aggregate(total=Sum(F('quantity') * F('price')))
 
     def __str__(self):
         return f'{self.client} / {self.date}'
