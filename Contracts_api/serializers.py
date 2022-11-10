@@ -44,7 +44,7 @@ class ContractSerializer(serializers.ModelSerializer):
 class ContractItemSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = models.ContractItems
+        model = models.ContractItem
         fields = ('id', 'name', 'price', 'quantity')
 
     def validate(self, data):
