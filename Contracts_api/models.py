@@ -70,7 +70,7 @@ class Contract(models.Model):
         return self.hospital
 
 
-class ContractItems(models.Model):
+class ContractItem(models.Model):
     contract_id = models.ForeignKey('Contracts_api.Contract', on_delete=models.CASCADE)
     warehouse_id = models.ForeignKey('Contracts_api.Warehouse', on_delete=models.CASCADE)
     quantity = models.FloatField(default=0)

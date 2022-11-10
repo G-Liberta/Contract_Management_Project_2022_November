@@ -139,10 +139,10 @@ class ContractViewSet(viewsets.ModelViewSet):
         serializer.save(user_profile=self.request.user)
 
 
-class ContractItemsViewSet(viewsets.ModelViewSet):
+class ContractItemViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
-    serializer_class = serializers.ContractItemsSerializer
-    queryset = models.ContractItems.objects.all()
+    serializer_class = serializers.ContractItemSerializer
+    queryset = models.ContractItem.objects.all()
     permission_classes = (IsAuthenticated,)
 
 

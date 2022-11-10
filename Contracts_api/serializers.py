@@ -41,7 +41,7 @@ class ContractSerializer(serializers.ModelSerializer):
         extra_kwargs = {'user_profile': {'read_only': True}}
 
 
-class ContractItemsSerializer(serializers.ModelSerializer):
+class ContractItemSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.ContractItems
