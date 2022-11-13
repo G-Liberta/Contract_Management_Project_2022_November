@@ -59,11 +59,11 @@ class Contract(models.Model):
     """Tabela e kontratave"""
     subject = models.CharField(max_length=255)
     hospital = models.ForeignKey('Contracts_api.Hospital', on_delete=models.CASCADE)
-    product = models.ForeignKey('Contracts_api.ContractItems', on_delete=models.CASCADE)
-    deadline = models.DateField
+    product = models.ForeignKey('Contracts_api.ContractItem', on_delete=models.CASCADE)
+    deadline = models.DateField(null=True)
     prot_nr = models.CharField(max_length=10)
-    sign_date = models.DateField
-    total_value = models.CharField
+    sign_date = models.DateField(null=True)
+    total_value = models.FloatField(default=0)
 
     def __str__(self):
         """Return the model as a string"""
@@ -86,9 +86,9 @@ class ContractItem(models.Model):
 
 class Hospital(models.Model):
     name = models.CharField(max_length=50)
-    adress = models.FloatField(max_length=250)
+    adress = models.CharField(max_length=250)
     email = models.EmailField(max_length=255, unique=True)
-    phone_nr = models.CharField
+    phone_nr = models.CharField(max_length=15, null=True)
 
     def __str__(self):
         return self.name
