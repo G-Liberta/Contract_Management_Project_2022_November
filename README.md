@@ -1,6 +1,6 @@
 # Contract_Management_Project
 
-This is a project worked with **Django framework**.
+This is a project based on **Django framework**.
 
 It was part of a course I attended on **Python Programming Language**.
 
