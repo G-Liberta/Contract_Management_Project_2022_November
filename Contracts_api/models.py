@@ -56,14 +56,14 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
         return self.email
 
 class Contract(models.Model):
-    """Tabela e kontratave"""
+    """Table that holds the Contracts"""
     subject = models.CharField(max_length=255)
     hospital = models.ForeignKey('Contracts_api.Hospital', on_delete=models.CASCADE)
-    product = models.ForeignKey('Contracts_api.ContractItem', on_delete=models.CASCADE)
+    product = models.ManyToManyField('Contracts_api.ContractItem')
     deadline = models.DateField(null=True)
     prot_nr = models.CharField(max_length=10)
     sign_date = models.DateField(null=True)
-    total_value = models.FloatField(default=0)
+    total_value = models.FloatField(null=True)
 
     def __str__(self):
         """Return the model as a string"""
@@ -71,8 +71,8 @@ class Contract(models.Model):
 
 
 class ContractItem(models.Model):
-    contract_id = models.ForeignKey('Contracts_api.Contract', on_delete=models.CASCADE)
-    warehouse_id = models.ForeignKey('Contracts_api.Warehouse', on_delete=models.CASCADE)
+    #contract_id = models.ForeignKey('Contracts_api.Contract.prot_nr', on_delete=models.CASCADE)
+    #warehouse_id = models.ForeignKey('Contracts_api.Warehouse', on_delete=models.CASCADE)
     quantity = models.FloatField(default=0)
     price = models.FloatField(default=0)
     discount = models.FloatField(default=0)
@@ -82,7 +82,7 @@ class ContractItem(models.Model):
         return self.invoiceitem_set.all().aggregate(total=Sum(F('quantity') * F('price')+F('discount')))
 
     def __str__(self):
-        return f'{self.contract_id}'
+        return f'{self.quantity}'
 
 class Hospital(models.Model):
     name = models.CharField(max_length=50)
@@ -95,8 +95,8 @@ class Hospital(models.Model):
 
 class Warehouse(models.Model):
     name = models.CharField(max_length=50)
-    price = models.FloatField(default=0)
-    quantity = models.FloatField(default=0)
+    price = models.FloatField(null=True)
+    quantity = models.FloatField(null=True)
 
     def __str__(self):
         return self.name
@@ -119,8 +119,8 @@ class Invoice(models.Model):
 
 class InvoiceItem(models.Model):
     warehouse_id = models.ForeignKey('Contracts_api.Warehouse', on_delete=models.CASCADE)
-    quantity = models.FloatField(default=0)
-    price = models.FloatField(default=0)
+    quantity = models.FloatField(null=True)
+    price = models.FloatField(null=True)
 
     def __str__(self):
         return self.warehouse_id
