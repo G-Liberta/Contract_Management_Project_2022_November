@@ -6,8 +6,8 @@ It was part of a course I attended on **Python Programming Language**.
 
 **Title of project:** Contract Management System
 
-**Description:** The projects is about a simple Contract Management System, which i have
-            worked based on the information of my current job on the Medical Devices field.
+**Description:** The projects is about a simple Contract Management System,
+            based on the information I have from my current job on the Medical Devices field.
 
 **Structure:** This system consist of few objects 
            (User Profile, Contract, Contract Items, Hospitals, Warehouse, Products, Invoice and 
