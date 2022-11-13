@@ -11,7 +11,7 @@ Description:The projects is about a simple Contract Management System, which i h
 
 Structure: This system consist of few objects 
            (User Profile, Contract, Contract Items, Hospitals, Warehouse, Products, Invoice and 
-            Invoice items), each of them having One-to-Many or Many-to_Many Relationship with other
+            Invoice items), each of them having One-to-Many or Many-to-Many Relationship with other
             objects of the project.
 
 
