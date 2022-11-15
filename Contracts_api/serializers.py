@@ -37,15 +37,14 @@ class ContractSerializer(serializers.ModelSerializer):
     class Meta:
         """meta class"""
         model = models.Contract
-        fields = ('id', 'user_profile', 'status_text', 'created_on')
-        extra_kwargs = {'user_profile': {'read_only': True}}
+        fields = ('id', 'subject', 'hospital', 'product', 'deadline', 'prot_nr', 'sign_date', 'total_value')
 
 
 class ContractItemSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.ContractItem
-        fields = ('id', 'name', 'price', 'quantity')
+        fields = ('id', 'contract_id', 'warehouse_id', 'quantity', 'price', 'discount')
 
     def validate(self, data):
         if data['quantity'] < 0:
@@ -56,7 +55,7 @@ class HospitalSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Hospital
-        fields = ('id', 'name', 'price', 'quantity')
+        fields = ('id', 'name', 'adress', 'email', 'phone_nr')
 
     def validate(self, data):
         if data['quantity'] < 0:
@@ -82,11 +81,11 @@ class InvoiceSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Invoice
-        fields = ('id', 'client', 'date', 'total', 'items')
+        fields = ('id', 'client', 'date', 'total')
 
 
 class InvoiceItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.InvoiceItem
-        fields = ('id', 'product', 'invoice', 'quantity', 'price', 'total')
+        fields = ('id', 'warehouse_id', 'quantity', 'price',)
         extra_kwargs = {'total': {'read_only': True}, 'price ': {'read_only': True}}
