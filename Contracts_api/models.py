@@ -71,7 +71,7 @@ class Contract(models.Model):
 
 
 class ContractItem(models.Model):
-    contract_id = models.ForeignKey('Contracts_api.Contract.prot_nr', null=True, on_delete=models.CASCADE)
+    #contract_id = models.ForeignKey('Contracts_api.Contract', null=True, on_delete=models.CASCADE)
     warehouse_id = models.ForeignKey('Contracts_api.Warehouse', null=True, on_delete=models.CASCADE)
     quantity = models.FloatField(default=0)
     price = models.FloatField(default=0)
