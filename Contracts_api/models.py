@@ -59,9 +59,9 @@ class Contract(models.Model):
     """Table that holds the Contracts"""
     subject = models.CharField(max_length=255)
     hospital = models.ForeignKey('Contracts_api.Hospital', on_delete=models.CASCADE)
-    product = models.ManyToManyField('Contracts_api.ContractItem')
+    product = models.ForeignKey('Contracts_api.ContractItem', null=True, on_delete=models.CASCADE )
     deadline = models.DateField(null=True)
-    prot_nr = models.CharField(max_length=10)
+    prot_nr = models.CharField(max_length=10, blank=True, null=True)
     sign_date = models.DateField(null=True)
     total_value = models.FloatField(null=True)
 
@@ -71,8 +71,8 @@ class Contract(models.Model):
 
 
 class ContractItem(models.Model):
-    #contract_id = models.ForeignKey('Contracts_api.Contract.prot_nr', on_delete=models.CASCADE)
-    #warehouse_id = models.ForeignKey('Contracts_api.Warehouse', on_delete=models.CASCADE)
+    contract_id = models.ForeignKey('Contracts_api.Contract.prot_nr', null=True, on_delete=models.CASCADE)
+    warehouse_id = models.ForeignKey('Contracts_api.Warehouse', null=True, on_delete=models.CASCADE)
     quantity = models.FloatField(default=0)
     price = models.FloatField(default=0)
     discount = models.FloatField(default=0)
