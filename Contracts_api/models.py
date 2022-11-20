@@ -6,8 +6,6 @@ from django.contrib.auth.models import BaseUserManager
 from django.conf import settings
 from django.db.models import Sum,F
 
-import Contracts_api.models
-
 
 class UserProfileManager(BaseUserManager):
     """Manager for UserProfiles"""
@@ -92,13 +90,14 @@ class Hospital(models.Model):
 
 class Warehouse(models.Model):
     name = models.CharField(max_length=50)
-    price = models.FloatField(null=True)
-    quantity = models.FloatField(null=True)
+    price = models.FloatField(default=0)
+    quantity = models.FloatField(default=0)
 
     def __str__(self):
         return self.name
 
 class Invoice(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     contract_id = models.ForeignKey('Contracts_api.Contract', on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now_add=True)
 
@@ -108,7 +107,7 @@ class Invoice(models.Model):
         # for item in self.invoiceitem_set.all():
         #     sum += item.total
         # return sum
-        return self.invoiceitems_set.all().aggregate(total=Sum(F('quantity') * F('price')))
+        return self.invoiceitem_set.all().aggregate(total=Sum(F('quantity') * F('price')))
 
     def __str__(self):
         return f'{self.date}'
@@ -117,8 +116,8 @@ class Invoice(models.Model):
 class InvoiceItem(models.Model):
     warehouse_id = models.ForeignKey('Contracts_api.Warehouse', on_delete=models.CASCADE)
     invoice_id = models.ForeignKey('Contracts_api.Invoice', on_delete=models.CASCADE)
-    quantity = models.FloatField(null=True)
-    price = models.FloatField(null=True)
+    quantity = models.FloatField(default=0)
+    price = models.FloatField(default=0)
 
     @property
     def total(self):

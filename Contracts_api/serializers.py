@@ -81,11 +81,11 @@ class InvoiceSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Invoice
-        fields = ('id', 'contract_id', 'date', 'total')
+        fields = ('id', 'contract_id', 'date', 'total', 'items')
 
 
 class InvoiceItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.InvoiceItem
-        fields = ('id', 'warehouse_id','invoice_id', 'quantity', 'price',)
+        fields = ('id', 'warehouse_id','invoice_id', 'quantity', 'price', 'total')
         extra_kwargs = {'total': {'read_only': True}, 'price ': {'read_only': True}}
