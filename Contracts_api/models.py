@@ -71,8 +71,15 @@ class Contract(models.Model):
 
 
 class ContractItem(models.Model):
+
+    GJENDJA_CHOICES = [
+        ('Y', 'Ka ne magazine'),
+        ('N', 'Nuk ka ne magazine'),
+        ('E', 'Ne pritje'),
+    ]
     contract_id = models.ForeignKey('Contracts_api.Contract', null=True, on_delete=models.CASCADE)
     name = models.CharField(max_length=50)
+    status = models. CharField(max_length=30, choices=GJENDJA_CHOICES, default='Y')
     quantity = models.FloatField(default=0)
     price = models.FloatField(default=0)
 
@@ -107,7 +114,7 @@ class Invoice(models.Model):
         # for item in self.invoiceitem_set.all():
         #     sum += item.total
         # return sum
-        return self.invoiceitem_set.all().aggregate(total=Sum(F('quantity') * F('price')))
+        return f"{self.invoiceitem_set.all().aggregate(total=Sum(F('quantity') * F('price')))}, {'EUR'}"
 
     def __str__(self):
         return f'{self.date}'
@@ -121,7 +128,7 @@ class InvoiceItem(models.Model):
 
     @property
     def total(self):
-        return self.price * self.quantity
+        return f"{self.price * self.quantity}, {'Eur'}"
 
     def __str__(self):
         return f'{self.warehouse_id} - {self.invoice_id}'
