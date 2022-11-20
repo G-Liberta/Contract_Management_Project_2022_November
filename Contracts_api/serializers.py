@@ -44,7 +44,7 @@ class ContractItemSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.ContractItem
-        fields = ('id', 'contract_id', 'warehouse_id', 'quantity', 'price', 'discount')
+        fields = ('id', 'name', 'quantity', 'price',)
 
     def validate(self, data):
         if data['quantity'] < 0:
@@ -58,8 +58,8 @@ class HospitalSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'adress', 'email', 'phone_nr')
 
     def validate(self, data):
-        if data['quantity'] < 0:
-            raise serializers.ValidationError("Product quantity can't be negative")
+        if data['name'] == None:
+            raise serializers.ValidationError("Hospital must have a name")
         return data
 
 class WarehouseSerializer(serializers.ModelSerializer):
@@ -81,11 +81,11 @@ class InvoiceSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Invoice
-        fields = ('id', 'client', 'date', 'total')
+        fields = ('id', 'contract_id', 'date', 'total')
 
 
 class InvoiceItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.InvoiceItem
-        fields = ('id', 'warehouse_id', 'quantity', 'price',)
+        fields = ('id', 'warehouse_id','invoice_id', 'quantity', 'price',)
         extra_kwargs = {'total': {'read_only': True}, 'price ': {'read_only': True}}

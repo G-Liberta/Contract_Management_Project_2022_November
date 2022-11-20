@@ -6,6 +6,9 @@ from django.contrib.auth.models import BaseUserManager
 from django.conf import settings
 from django.db.models import Sum,F
 
+import Contracts_api.models
+
+
 class UserProfileManager(BaseUserManager):
     """Manager for UserProfiles"""
 
@@ -53,7 +56,7 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         """Return string representation of user"""
-        return self.email
+        return self.name
 
 class Contract(models.Model):
     """Table that holds the Contracts"""
@@ -61,28 +64,22 @@ class Contract(models.Model):
     hospital = models.ForeignKey('Contracts_api.Hospital', on_delete=models.CASCADE)
     product = models.ForeignKey('Contracts_api.ContractItem', null=True, on_delete=models.CASCADE )
     deadline = models.DateField(null=True)
-    prot_nr = models.CharField(max_length=10, blank=True, null=True)
     sign_date = models.DateField(null=True)
+    prot_nr = models.CharField(max_length=10, null=True)
     total_value = models.FloatField(null=True)
 
     def __str__(self):
         """Return the model as a string"""
-        return self.hospital
+        return f"{str(self.hospital)}, {self.prot_nr}"
 
 
 class ContractItem(models.Model):
-    contract_id = models.ForeignKey('Contracts_api.Contract', null=True, on_delete=models.CASCADE)
-    warehouse_id = models.ForeignKey('Contracts_api.Warehouse', null=True, on_delete=models.CASCADE)
+    name = models.CharField(max_length=50)
     quantity = models.FloatField(default=0)
     price = models.FloatField(default=0)
-    discount = models.FloatField(default=0)
-
-    @property
-    def total(self):
-        return self.invoiceitem_set.all().aggregate(total=Sum(F('quantity') * F('price')+F('discount')))
 
     def __str__(self):
-        return f'{self.quantity}'
+        return f'{self.name}'
 
 class Hospital(models.Model):
     name = models.CharField(max_length=50)
@@ -102,7 +99,7 @@ class Warehouse(models.Model):
         return self.name
 
 class Invoice(models.Model):
-    client = models.ForeignKey('Contracts_api.Hospital', on_delete=models.CASCADE)
+    contract_id = models.ForeignKey('Contracts_api.Contract', on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now_add=True)
 
     @property
@@ -119,6 +116,7 @@ class Invoice(models.Model):
 
 class InvoiceItem(models.Model):
     warehouse_id = models.ForeignKey('Contracts_api.Warehouse', on_delete=models.CASCADE)
+    invoice_id = models.ForeignKey('Contracts_api.Invoice', on_delete=models.CASCADE)
     quantity = models.FloatField(null=True)
     price = models.FloatField(null=True)
 
